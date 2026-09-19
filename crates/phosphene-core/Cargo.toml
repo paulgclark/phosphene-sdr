@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "phosphene-core"
+description = "DSP core for phosphene: windowing, FFT, and dBFS power spectrum (spec §7)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# The one and only FFT (LC-2/D-003: FFTW is GPL and banned).
+rustfft = "6.4"
+
+[dev-dependencies]
+criterion = { version = "0.8.2", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "live_trace"
+harness = false

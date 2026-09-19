@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "phosphene-analyze"
+description = "Signal analysis & annotation for phosphene: detection, tracking, measurement, in-place labels (nextgen spec 002)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+# D-017: the entire crate sits behind `analyze` from its first commit. With the
+# flag off this compiles to an EMPTY library with zero dependencies, so v1
+# builds and release artifacts are unaffected. v2.0 is cut when the flag
+# graduates to default.
+default = []
+analyze = ["dep:phosphene-core", "dep:serde", "dep:rayon"]
+
+[dependencies]
+# Shared Complex type + the SpectrumAnalyzer the offline harness uses.
+phosphene-core = { path = "../phosphene-core", optional = true }
+# Shared types are serializable for golden tests / headless annotations.json
+# (nextgen spec §8.3, §8.4). serde is MIT OR Apache-2.0 — inside the LC-2
+# allowlist already gated by deny.toml.
+serde = { version = "1", features = ["derive"], optional = true }
+# D-125 Amendment 4 item 2 (the owner: "yes" to parallelising the per-bin
+# floor/CFAR work): a persistent work-stealing thread pool, so the per-frame
+# per-bin split (crates/phosphene-analyze/src/detect/parallel.rs) does not
+# pay an OS thread-creation cost every single frame — measured directly:
+# spawning std::thread::scope threads fresh per frame made 10 MS/s ~2.3x
+# SLOWER than single-threaded (1831ms vs 781ms), almost all in kernel time
+# (thread creation/teardown), not the per-bin work itself. rayon is dual
+# MIT/Apache-2.0, both already in the LC-2 allow list (deny.toml); its own
+# transitive tree is dev/build-tool-free and stayed inside that list with
+# no deny.toml edit (`cargo deny check licenses` — see the commit that
+# added this line for the exact output).
+rayon = { version = "1", optional = true }
+
+[dev-dependencies]
+# The M0 signal generator is the known-ground-truth input the test harness
+# runs against (nextgen spec §2.3). Dev-only: the shipped crate depends on
+# phosphene-core alone (nextgen spec §8.1).
+phosphene-sources = { path = "../phosphene-sources", features = ["siggen"] }
+serde_json = "1"
+
+[[test]]
+name = "skeleton"
+required-features = ["analyze"]

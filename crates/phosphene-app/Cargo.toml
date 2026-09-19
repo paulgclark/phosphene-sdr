@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "phosphene-app"
+description = "phosphene binary: CLI, wiring, windowed and headless entry points"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "phosphene"
+path = "src/main.rs"
+
+# AI-1: this file spawns the compiled binary with `--analyze`, which does not
+# exist as a flag at all when the `analyze` feature is off (see the feature
+# doc below) — skip the whole target rather than fail on an unrecognized
+# flag.
+[[test]]
+name = "analyze_goldens"
+path = "tests/analyze_goldens.rs"
+required-features = ["analyze"]
+
+# D-100/AC-15: uses phosphene_analyze directly, which is not even a linked
+# dependency without the analyze feature (see the feature doc below) — skip
+# the target rather than fail to compile. `test = true` is deliberate
+# (fix pass 4): examples do not run under `cargo test` by default, and this
+# one's own filesystem-verification function is this command's negative
+# control — it must run in CI like any other test, not sit unexercised.
+[[example]]
+name = "render_look_review"
+path = "examples/render_look_review.rs"
+required-features = ["analyze"]
+test = true
+
+[features]
+# AI-1 (D-017/D-091): the app implements SpectrumTap and runs the live
+# analysis worker only behind this flag AND the runtime `--analyze` flag
+# (FR-AU1). With it off, phosphene-analyze is not even linked in, and the
+# `--analyze` CLI flag does not exist at all — the display is exactly v1's.
+default = []
+analyze = ["dep:phosphene-analyze"]
+
+[dependencies]
+phosphene-core = { path = "../phosphene-core" }
+phosphene-render = { path = "../phosphene-render" }
+phosphene-sources = { path = "../phosphene-sources" }
+# Live-integration lane (AI-1): the analysis pipeline, opt-in via the
+# `analyze` feature above. `phosphene-app` implements SpectrumTap over the
+# power spectra its own compute path already produces and drives detect →
+# track → measure → annotate on its own worker (nextgen spec §8.2).
+phosphene-analyze = { path = "../phosphene-analyze", features = ["analyze"], optional = true }
+clap = { version = "4", features = ["derive"] }
+# SPSC ring between source and compute threads (spec §8.2/§8.3; MIT).
+rtrb = "0.3"
+# default_fonts stays OFF (LC-2): the OFL font ships in phosphene-render.
+egui = { version = "0.36", default-features = false }
+egui-wgpu = { version = "0.36", default-features = false }
+egui-winit = { version = "0.36", default-features = false, features = ["wayland", "x11"] }
+wgpu = "30"
+winit = "0.30"
+png = "0.18"
+pollster = "0.4"
+
+[dev-dependencies]
+png = "0.18"

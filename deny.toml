@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: MIT
+# cargo-deny configuration — the LC-2 license gate (D-003), active from the first
+# commit. The allow list below is exactly the LC-2 permitted set from AGENTS.md:
+# MIT, BSD, Apache-2.0, Zlib, BSL-1.0, MPL-2.0, CC0, OFL (fonts).
+# GPL of any flavour must never appear here; LGPL is dynamic-link-only and is
+# handled per-backend (spec §4.5), never via a crates.io dependency.
+#
+# Coverage boundary (measured against cargo-deny 0.20, M0-D): in this virtual
+# workspace the licence graph contains every NORMAL and BUILD dependency of
+# every member — i.e. everything that can reach release artifacts, which is
+# exactly what LC-2 constrains — but does NOT follow members' dev-dependency
+# subtrees (criterion's tree is outside the gate). A GPL dev-tool would not
+# ship, but adding one should still be treated as a finding, not waved through.
+# The gate is self-tested per commit: xtask/tests/lc2_gate.rs generates a
+# GPL-licensed canary in a temp dir and asserts this config FAILS on it.
+
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "Zlib",
+    "BSL-1.0",
+    "MPL-2.0",
+    "CC0-1.0",
+    "OFL-1.1",
+    # D-018 additions (master decision, 2026-08-24). Both are permissive
+    # licences of the same class as those already permitted — neither is
+    # copyleft, so the prohibition that matters (no GPL linked, vendored or
+    # bundled; LGPL dynamic-only) is untouched:
+    # * ISC — OSI-approved, functionally equivalent to MIT / 2-clause BSD.
+    # * Unicode-3.0 — carried by unicode-ident and its relatives; effectively
+    #   unavoidable in any Rust tree touching identifier or text handling.
+    # STANDING RULE (D-018): a lane that hits an unlisted licence STOPS and
+    # asks — it never edits this file to make its own build pass. Every
+    # addition here is a D-entry naming the licence and its class; that rule
+    # is the reason this gate is worth anything.
+    "ISC",
+    "Unicode-3.0",
+]
+
+[bans]
+# FFTW bindings are banned outright (GPL — LC-2/D-003); rustfft is the FFT.
+deny = [
+    { crate = "fftw", reason = "FFTW is GPL — banned by LC-2/D-003; use rustfft" },
+    { crate = "fftw-sys", reason = "FFTW is GPL — banned by LC-2/D-003; use rustfft" },
+]

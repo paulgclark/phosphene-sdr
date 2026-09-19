@@ -1,0 +1,71 @@
+{
+  "SPDX-License-Identifier": "MIT",
+  "benches": {
+    "end_to_end/1024": {
+      "elements": 1024,
+      "median_ns": 3242.404834698952
+    },
+    "end_to_end/16384": {
+      "elements": 16384,
+      "median_ns": 62588.13092885376
+    },
+    "end_to_end/2048": {
+      "elements": 2048,
+      "median_ns": 6538.232632467994
+    },
+    "end_to_end/32768": {
+      "elements": 32768,
+      "median_ns": 127251.23031716418
+    },
+    "end_to_end/4096": {
+      "elements": 4096,
+      "median_ns": 14172.112777721926
+    },
+    "end_to_end/512": {
+      "elements": 512,
+      "median_ns": 1519.740767653612
+    },
+    "end_to_end/8192": {
+      "elements": 8192,
+      "median_ns": 29917.65283756989
+    },
+    "mag_log/1024": {
+      "elements": 1024,
+      "median_ns": 1650.553356605923
+    },
+    "mag_log/32768": {
+      "elements": 32768,
+      "median_ns": 53662.069838056676
+    },
+    "window_fft/1024": {
+      "elements": 1024,
+      "median_ns": 1464.3703611355586
+    },
+    "window_fft/16384": {
+      "elements": 16384,
+      "median_ns": 33745.82482638889
+    },
+    "window_fft/2048": {
+      "elements": 2048,
+      "median_ns": 2989.602933525871
+    },
+    "window_fft/32768": {
+      "elements": 32768,
+      "median_ns": 70233.33320105821
+    },
+    "window_fft/4096": {
+      "elements": 4096,
+      "median_ns": 7169.472967122398
+    },
+    "window_fft/512": {
+      "elements": 512,
+      "median_ns": 629.2577053724676
+    },
+    "window_fft/8192": {
+      "elements": 8192,
+      "median_ns": 15034.83930211203
+    }
+  },
+  "class": "aarch64-macos-m3-ultra",
+  "generated_by": "cargo run -p xtask -- bench-baseline (spec §10 regression baseline)"
+}

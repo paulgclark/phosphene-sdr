@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "xtask"
+description = "Dev automation: bench baseline/regression gate (spec §10) and NFR-P5 artifact-size report (C7)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+# JSON in/out for criterion estimates and the stored baselines. serde_json is
+# MIT/Apache-2.0 and (without the derive feature) pulls no proc-macro chain,
+# so the LC-2 licence graph stays clean — see deny.toml.
+serde_json = "1"
+# The scrub subcommand's pattern matching (PS-1 / D-082). MIT/Apache-2.0
+# (LC-2 clean) and already present in the tree's dependency graph.
+regex = "1"

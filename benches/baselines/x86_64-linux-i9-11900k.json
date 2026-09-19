@@ -1,0 +1,71 @@
+{
+  "SPDX-License-Identifier": "MIT",
+  "benches": {
+    "end_to_end/1024": {
+      "elements": 1024,
+      "median_ns": 6899.245954802773
+    },
+    "end_to_end/16384": {
+      "elements": 16384,
+      "median_ns": 118202.77706971676
+    },
+    "end_to_end/2048": {
+      "elements": 2048,
+      "median_ns": 13954.097809076684
+    },
+    "end_to_end/32768": {
+      "elements": 32768,
+      "median_ns": 243505.00461538465
+    },
+    "end_to_end/4096": {
+      "elements": 4096,
+      "median_ns": 28722.771571428573
+    },
+    "end_to_end/512": {
+      "elements": 512,
+      "median_ns": 3364.2498390686524
+    },
+    "end_to_end/8192": {
+      "elements": 8192,
+      "median_ns": 58493.96934275272
+    },
+    "mag_log/1024": {
+      "elements": 1024,
+      "median_ns": 3499.5909469285134
+    },
+    "mag_log/32768": {
+      "elements": 32768,
+      "median_ns": 161662.99849447975
+    },
+    "window_fft/1024": {
+      "elements": 1024,
+      "median_ns": 872.2499513680666
+    },
+    "window_fft/16384": {
+      "elements": 16384,
+      "median_ns": 21430.676054018448
+    },
+    "window_fft/2048": {
+      "elements": 2048,
+      "median_ns": 1888.81696969697
+    },
+    "window_fft/32768": {
+      "elements": 32768,
+      "median_ns": 50183.43830213904
+    },
+    "window_fft/4096": {
+      "elements": 4096,
+      "median_ns": 4635.707392037786
+    },
+    "window_fft/512": {
+      "elements": 512,
+      "median_ns": 359.5331997069228
+    },
+    "window_fft/8192": {
+      "elements": 8192,
+      "median_ns": 9860.645104529616
+    }
+  },
+  "class": "x86_64-linux-i9-11900k",
+  "generated_by": "cargo run -p xtask -- bench-baseline (spec §10 regression baseline)"
+}

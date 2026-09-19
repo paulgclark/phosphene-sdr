@@ -1,0 +1,2 @@
+This fixture exists only to exercise the tracker-ids check.
+It intentionally contains a citation-shaped id: F-123.

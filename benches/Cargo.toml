@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "phosphene-benches"
+description = "Criterion benchmark harness: re-baselines spec §3.2 on real hardware (D-005, Appendix B)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+phosphene-core = { path = "../crates/phosphene-core" }
+# Same FFT the core uses (LC-2/D-003: FFTW is GPL and banned) — needed here to
+# bench the window+FFT stage in isolation, without the mag/log tail.
+rustfft = "6.4"
+
+[dev-dependencies]
+criterion = { version = "0.7", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "dsp"
+harness = false
+
+# This crate exists only to host benches; it has no library API of its own.
+[lib]
+path = "src/lib.rs"

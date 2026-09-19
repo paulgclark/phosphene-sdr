@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MIT
+# phosphene workspace — crate boundaries per product spec §8.1 (NFR-Q2).
+# Lanes own crates: each M0 lane adds its own member; this file is the only
+# shared touch point.
+
+[workspace]
+resolver = "2"
+members = [
+    "benches",
+    "crates/phosphene-analyze",
+    "crates/phosphene-app",
+    "crates/phosphene-core",
+    "crates/phosphene-render",
+    "crates/phosphene-sources",
+    "xtask",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/paulgclark/phosphene"

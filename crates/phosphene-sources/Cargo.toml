@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "phosphene-sources"
+description = "SampleSource trait + source backends for phosphene (product spec §5.2/§8.2)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+# Backends are cargo features (spec §8.1). The signal generator is default-on:
+# it is the demo mode and the test fixture every later lane tests against.
+# The file/stdin source (FR-S1, D-015 priority 2) is default-on: pure std,
+# no extra dependencies, and the replay path every test and demo leans on.
+default = ["siggen", "file"]
+siggen = []
+file = []
+# SoapySDR hardware backend (FR-S5, lane S1-A) — spec §4.5 Pattern C. OFF by
+# default: CI has no SoapySDR and the default build must not need it (the
+# `soapy` module's pure-Rust half still compiles and tests without it).
+soapy = ["dep:soapysdr"]
+
+[dependencies]
+phosphene-core = { path = "../phosphene-core" }
+# SigMF sidecars are JSON (D-055). MIT OR Apache-2.0, as is its whole tree —
+# LC-2 clean, and reading three fields out of a real-world file is not a place
+# to hand-roll a parser (NFR-Q1: boring Rust).
+serde_json = "1"
+
+# Pattern C plugin host (LC-2): links libSoapySDR only — BSL-1.0, on the
+# allow-list. The crate itself is BSL-1.0 OR Apache-2.0; its soapysdr-sys
+# binding is BSL-1.0. GPL device modules (SoapyUHD & co.) are loaded by
+# libSoapySDR at runtime from the user's machine and are never linked,
+# vendored, or distributed — see crates/phosphene-sources/src/soapy/mod.rs
+# for the full audit trail.
+soapysdr = { version = "0.5.1", default-features = false, optional = true }
+
+[[test]]
+name = "siggen"
+required-features = ["siggen"]
+
+[[test]]
+name = "file"
+required-features = ["file", "siggen"]
+
+[[test]]
+name = "soapy"
+required-features = ["soapy"]
+
+[[example]]
+name = "soapy_capture"
+required-features = ["soapy"]

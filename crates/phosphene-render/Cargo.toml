@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: MIT
+
+[package]
+name = "phosphene-render"
+description = "Rendering for phosphene: wgpu data surface, egui chrome, D-010 visual identity"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# egui default features bundle fonts under Ubuntu-font-1.0, which is outside the
+# LC-2 permitted set — default_fonts stays OFF and we ship JetBrains Mono (OFL-1.1,
+# explicitly permitted) from assets/fonts instead.
+egui = { version = "0.36", default-features = false }
+egui-wgpu = { version = "0.36", default-features = false }
+wgpu = "30"
+bytemuck = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+# Offscreen golden tests (D-014): block on wgpu futures, and read/write the
+# stored golden PNGs. Both MIT/Apache-2.0 (LC-2). Appended per D-019.
+pollster = "0.4"
+png = "0.18"
